@@ -34,6 +34,8 @@
     release: "{{ alertmanager_bot_version }}"
     shared_path: "{{ alertmanager_bot_shared_dir }}"
     state: present
+  tags:
+    - am_bot_configure
 
 - name: create release directory
   file:
@@ -47,7 +49,7 @@
   get_url:
     url: "{{ alertmanager_bot_download_url }}"
     dest: "{{ deploy_helper.new_release_path }}/alertmanager_bot"
-    remote_src: true
+    #remote_src: true
   register: _download_archive
   until: _download_archive is succeeded
   retries: 5
@@ -79,6 +81,8 @@
     mode: 0644
   notify:
     - restart alertmanager bot
+  tags:
+    - am_bot_configure
 
 - name: create systemd service unit
   template:
